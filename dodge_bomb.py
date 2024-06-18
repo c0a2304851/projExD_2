@@ -23,18 +23,8 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool,bool]:
         y_axis = False
     return x_axis,y_axis
 
-def return_dict():
-    return {  # こうかとんの回転辞書 .loadのところ定数にした方が良い
-        (0,-5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 90, 2.0),
-        (+5,-5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 45, 2.0),
-        (+5,0): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 0, 2.0),
-        (+5,+5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 315, 2.0),
-        (0,+5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 270, 2.0),
-        (-5,+5): pg.transform.rotozoom(KOUKATON, 45, 2.0),
-        (-5,0): pg.transform.rotozoom(KOUKATON, 0, 2.0),
-        (-5,-5): pg.transform.rotozoom(KOUKATON, 315, 2.0),
-        (0,0): pg.transform.rotozoom(KOUKATON, 0, 2.0),
-    }
+def draw_gameover():
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -72,7 +62,11 @@ def main():
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
 
-        bb_rct.move_ip(vx,vy)
+        bb_accs,bb_imgs = return_bbap()
+        avx = vx*bb_accs[min(tmr//500,9)]
+        avy = vy*bb_accs[min(tmr//500,9)]
+        bb_img = bb_imgs[min(tmr//500,9)]
+        bb_rct.move_ip(avx,avy)
         xis, yis = check_bound(bb_rct)
         if not xis:
             vx *= -1
@@ -83,6 +77,28 @@ def main():
         tmr += 1
         clock.tick(50)
 
+def return_bbap():  #bombのaccelとpowerを返す
+    bb_accel = [i for i in range(1,11)]
+    bb_power = []
+    for r in bb_accel:
+        bb_img = pg.Surface((20*r,20*r))  # 20*20の空Surface
+        pg.draw.circle(bb_img,(255,0,0),(10*r,10*r),10*r)  # 空Surfaceに赤い円を描く
+        bb_img.set_colorkey((0,0,0))
+        bb_power.append(bb_img)
+    return tuple(bb_accel),tuple(bb_power)
+
+def return_dict():
+    return {  # こうかとんの回転辞書 .loadのところ定数にした方が良い
+        (0,-5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 90, 2.0),
+        (+5,-5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 45, 2.0),
+        (+5,0): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 0, 2.0),
+        (+5,+5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 315, 2.0),
+        (0,+5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 270, 2.0),
+        (-5,+5): pg.transform.rotozoom(KOUKATON, 45, 2.0),
+        (-5,0): pg.transform.rotozoom(KOUKATON, 0, 2.0),
+        (-5,-5): pg.transform.rotozoom(KOUKATON, 315, 2.0),
+        (0,0): pg.transform.rotozoom(KOUKATON, 0, 2.0),
+    }
 
 if __name__ == "__main__":
     pg.init()
