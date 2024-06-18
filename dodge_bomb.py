@@ -14,6 +14,15 @@ DELTA = {  # 移動量辞書
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
+def check_bound(obj_rct: pg.Rect) -> tuple[bool,bool]:
+    x_axis,y_axis = True,True
+    if obj_rct.left < 0 or WIDTH < obj_rct.right:
+        x_axis = False
+    if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
+        y_axis = False
+    return x_axis,y_axis
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -43,9 +52,16 @@ def main():
                 sum_mv[0] += v[0]
                 sum_mv[1] += v[1]
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
         screen.blit(kk_img, kk_rct)
 
         bb_rct.move_ip(vx,vy)
+        xis, yis = check_bound(bb_rct)
+        if not xis:
+            vx *= -1
+        if not yis:
+            vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
