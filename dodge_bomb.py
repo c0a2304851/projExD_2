@@ -23,8 +23,26 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool,bool]:
         y_axis = False
     return x_axis,y_axis
 
-def draw_gameover():
-
+def draw_gameover(screen):
+    bg_img = pg.image.load("fig/pg_bg.jpg")
+    black_out = pg.Surface((WIDTH,HEIGHT))
+    pg.draw.rect(black_out,(0,0,0),(0,0,WIDTH,HEIGHT),0)
+    black_out.set_alpha(50)
+    kk_img_go = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 2.0)
+    kk_rct_l = kk_img_go.get_rect()
+    kk_rct_l.center = int(WIDTH/3),int(HEIGHT/2)
+    kk_rct_r = kk_img_go.get_rect()
+    kk_rct_r.center = int(WIDTH/3*2),int(HEIGHT/2)  
+    font = pg.font.Font(None, 80)
+    txt = font.render("gameover", True,(255,255,255))
+    screen.blit(bg_img, [0, 0])
+    screen.blit(black_out, [0,0])
+    screen.blit(kk_img_go, kk_rct_l)
+    screen.blit(kk_img_go, kk_rct_r)
+    screen.blit(txt, [int(WIDTH/2),int(HEIGHT/2)])
+    pg.display.update()
+    clock = pg.time.Clock()
+    clock.tick(0.2)
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -47,6 +65,7 @@ def main():
             if event.type == pg.QUIT: 
                 return
             if kk_rct.colliderect(bb_rct):
+                draw_gameover(screen)
                 return #ゲームオーバー
         screen.blit(bg_img, [0, 0]) 
 
