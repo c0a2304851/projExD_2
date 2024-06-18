@@ -33,13 +33,13 @@ def draw_gameover(screen):
     kk_rct_l.center = int(WIDTH/3),int(HEIGHT/2)
     kk_rct_r = kk_img_go.get_rect()
     kk_rct_r.center = int(WIDTH/3*2),int(HEIGHT/2)  
-    font = pg.font.Font(None, 80)
+    font = pg.font.Font(None, 120)
     txt = font.render("gameover", True,(255,255,255))
     screen.blit(bg_img, [0, 0])
     screen.blit(black_out, [0,0])
     screen.blit(kk_img_go, kk_rct_l)
     screen.blit(kk_img_go, kk_rct_r)
-    screen.blit(txt, [int(WIDTH/2),int(HEIGHT/2)])
+    screen.blit(txt, [int(WIDTH/2)-200,int(HEIGHT/2)-50])
     pg.display.update()
     clock = pg.time.Clock()
     clock.tick(0.2)
@@ -107,7 +107,7 @@ def return_bbap():  #bombのaccelとpowerを返す
     return tuple(bb_accel),tuple(bb_power)
 
 def return_dict():
-    return {  # こうかとんの回転辞書 .loadのところ定数にした方が良い
+    return {  # こうかとんの回転のための辞書を返り値として返す
         (0,-5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 90, 2.0),
         (+5,-5): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 45, 2.0),
         (+5,0): pg.transform.rotozoom(pg.transform.flip(KOUKATON,True,False), 0, 2.0),
